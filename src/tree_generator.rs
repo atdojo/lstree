@@ -89,8 +89,6 @@ pub mod tree_generator {
             if self.config.use_regex {
                 if self.config.regex_exclude_files.is_match(file) {
                     self.stats.ignored += 1;
-                    println!("{}    {}", file, is_root_iteration);
-
                     return None;
                 }
             }
