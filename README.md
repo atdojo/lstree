@@ -1,7 +1,5 @@
 # lstree
-ls and tree combined  
-  
-![lstree image](./assets/lstree.png)
+ls and tree combined.
 ```bash
 Usage: lstree [OPTIONS] [File]...
 
