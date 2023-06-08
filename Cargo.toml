@@ -8,6 +8,7 @@ repository = "https://github.com/atdojo/lstree/tree/main"
 license-file = "LICENSE"
 keywords = ["ls", "tree"]
 categories = ["command-line-utilities"]
+description = "ls and tree combined"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

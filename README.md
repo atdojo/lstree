@@ -1,5 +1,5 @@
 # lstree
-
+ls and tree combined
 ```bash
 Usage: lstree [OPTIONS] [File]...
 
