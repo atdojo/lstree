@@ -12,6 +12,7 @@ pub mod tree_renderer {
         pub display_file_size: bool,
         pub display_last_modified: bool,
         pub reverse_bottom_top: bool,
+        pub print_all_file: bool,
         /// Unit of file size, only matters with include_metadata
         /// B, K, M, G
         pub block_size: String,
@@ -30,6 +31,7 @@ pub mod tree_renderer {
                 display_file_size: false,
                 display_last_modified: false,
                 reverse_bottom_top: false,
+                print_all_file: false,
                 block_size: "B".to_string(),
                 color_file: Color::White,
                 color_directory: Color::Blue,
@@ -64,24 +66,38 @@ pub mod tree_renderer {
             self.tree = tree;
             self.config = config;
             for tree_item in self.tree.files.iter() {
-                self.render_recursive(tree_item, 0)
+                self.render_recursive(tree_item, 0, vec![].as_mut())
             }
         }
 
-        fn render_recursive(&self, tree_item: &TreeItem, depth: usize) {
+        fn render_recursive(&self, tree_item: &TreeItem, depth: usize, files_before: &mut Vec<String>) {
             for sub_tree_item in tree_item.files.iter() {
                 if self.config.reverse_bottom_top {
-                    self.render_recursive(&sub_tree_item, depth + 1);
-                    self.render_tree_item(&sub_tree_item, &depth);
+                    let mut files_before_clone: Vec<String> = files_before.clone();
+                    if sub_tree_item.is_dir {
+                        files_before_clone.push(sub_tree_item.file.clone());
+                    }
+                    self.render_recursive(&sub_tree_item, depth + 1, &mut files_before_clone);
+                    self.render_tree_item(&sub_tree_item, &depth, &mut files_before_clone);
                 } else {
-                    self.render_tree_item(&sub_tree_item, &depth);
-                    self.render_recursive(&sub_tree_item, depth + 1);
+                    let mut files_before_clone: Vec<String> = files_before.clone();
+                    self.render_tree_item(&sub_tree_item, &depth, &mut files_before_clone);
+                    if sub_tree_item.is_dir {
+                        files_before_clone.push(sub_tree_item.file.clone());
+                    }
+                    self.render_recursive(&sub_tree_item, depth + 1, &mut files_before_clone);
                 }
             }
         }
 
-        fn render_tree_item(&self, sub_tree_item: &TreeItem, depth: &usize) {
-            print!("{}", self.config.tree_spacer.repeat(*depth));
+        fn render_tree_item(&self, sub_tree_item: &TreeItem, depth: &usize, files_before: &mut Vec<String>) {
+            if self.config.print_all_file {
+                for file in files_before.into_iter() {
+                    print!("{}{}", file.color(self.config.color_directory), self.config.tree_spacer)
+                }
+            } else {
+                print!("{}", self.config.tree_spacer.repeat(*depth));
+            }
 
             if sub_tree_item.is_dir {
                 print!("{}", sub_tree_item.file.color(self.config.color_directory));

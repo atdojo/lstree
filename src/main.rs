@@ -29,6 +29,9 @@ struct Args {
     #[clap(short, long, value_name = "Reverse tree", default_value = "false")]
     reverse: bool,
 
+    #[clap(short, long, value_name = "Print always file, to make tree grepable", default_value = "false")]
+    print_all_file: bool,
+
     #[clap(short, long, value_name = "Ignore files base on regex", default_value = "")]
     exclude: String,
 
@@ -58,6 +61,7 @@ fn main() {
         display_last_modified: args.long,
         reverse_bottom_top: args.reverse,
         block_size: args.block_size,
+        print_all_file: args.print_all_file,
         color_directory: colored::Color::Blue,
         color_file: colored::Color::White,
         color_file_size: colored::Color::White,
